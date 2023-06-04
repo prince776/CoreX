@@ -18,6 +18,12 @@
       "type": "shell",
       "command": "bash",
       "args": ["${workspaceFolder}/build-and-run.sh"]
+    },
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/clean.sh"]
     }
   ]
 }
