@@ -1,4 +1,3 @@
-#include "CoreX/type_traits.hpp"
 #include <CoreX/core.hpp>
 #include <any>
 #include <gtest/gtest.h>
