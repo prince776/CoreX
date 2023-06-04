@@ -1,5 +1,4 @@
 #include <CoreX/core.hpp>
-#include <_types/_uint64_t.h>
 #include <gtest/gtest.h>
 
 TEST(TestAllocator, BasicTest) {
