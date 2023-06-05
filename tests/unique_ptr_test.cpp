@@ -1,7 +1,6 @@
 #include "CoreX/allocator.hpp"
 #include "CoreX/unique_ptr.hpp"
 #include <CoreX/CoreX.hpp>
-#include <_types/_uint64_t.h>
 #include <cstdlib>
 #include <dlfcn.h>
 #include <gtest/gtest.h>
