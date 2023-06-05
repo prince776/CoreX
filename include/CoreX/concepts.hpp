@@ -1,3 +1,4 @@
+#pragma once
 #include <CoreX/type_traits.hpp>
 
 template <typename T, typename U>

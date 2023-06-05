@@ -1,5 +1,5 @@
 #!/bin/sh
 
 cd build
-ctest --output-on-failure --verbose
+ctest --output-on-failure 
 cd ..
