@@ -1,20 +1,28 @@
 #pragma once
 
-template <typename T> class ForwardIterator {
+template <typename T>
+class ForwardIterator {
   public:
     // Type aliases.
-    using value_type = T;
-    using reference = T&;
-    using pointer = T*;
+    using value_type      = T;
+    using reference       = T&;
+    using pointer         = T*;
     using const_reference = const T&;
 
     // Constructor.
-    ForwardIterator(T* ptr) : ptr(ptr) {}
+    ForwardIterator(T* ptr) : ptr(ptr) {
+    }
 
     // Dereferencing.
-    reference operator*() { return *ptr; }
-    const_reference operator*() const { return *ptr; }
-    pointer operator->() const { return ptr; }
+    reference operator*() {
+        return *ptr;
+    }
+    const_reference operator*() const {
+        return *ptr;
+    }
+    pointer operator->() const {
+        return ptr;
+    }
 
     // Increment operators.
     ForwardIterator& operator++() {
@@ -28,7 +36,9 @@ template <typename T> class ForwardIterator {
     }
 
     // Comparision operators.
-    bool operator==(const ForwardIterator& rhs) const { return ptr == rhs.ptr; }
+    bool operator==(const ForwardIterator& rhs) const {
+        return ptr == rhs.ptr;
+    }
     bool operator!=(const ForwardIterator& rhs) const {
         return !(*this == rhs);
     }
