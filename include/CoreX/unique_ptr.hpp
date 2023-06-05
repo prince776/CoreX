@@ -161,10 +161,16 @@ class UniquePtr<T[], Alloc> {
     }
 
     [[nodiscard]] const T& operator[](size_t index) const noexcept {
+        assert(index < size());
         return get()[index];
     }
     [[nodiscard]] T& operator[](size_t index) noexcept {
+        assert(index < size());
         return get()[index];
+    }
+
+    [[nodiscard]] size_t size() const noexcept {
+        return data.size / sizeof(T);
     }
 
   public:
