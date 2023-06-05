@@ -1,8 +1,5 @@
-#include "CoreX/allocator.hpp"
-#include "CoreX/unique_ptr.hpp"
 #include <CoreX/CoreX.hpp>
 #include <cstdlib>
-#include <dlfcn.h>
 #include <gtest/gtest.h>
 #include <map>
 #include <memory>
