@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <CoreX/concepts.hpp>
 
@@ -19,4 +20,26 @@ concept Allocator = requires(Alloc alloc, uint64_t size) {
     { alloc.allocate(size) } -> same_as<Blk>;
     { alloc.deallocate(Blk{nullptr, size}) };
     { alloc.owns(Blk{nullptr, size}) } -> same_as<bool>;
+};
+
+class Mallocator {
+  public:
+    Mallocator() = default;
+
+    [[nodiscard]] Blk allocate(uint64_t size) noexcept {
+        if (!size) {
+            return Blk{nullptr, 0};
+        }
+        return Blk{malloc(size), size};
+    }
+
+    void deallocate(const Blk& blk) noexcept {
+        if (blk.ptr) {
+            free(blk.ptr);
+        }
+    }
+
+    [[nodiscard]] bool owns(const Blk& blk) noexcept {
+        return blk.ptr != nullptr;
+    }
 };

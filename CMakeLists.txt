@@ -48,7 +48,7 @@ foreach(TEST_SOURCE ${TEST_SOURCES})
     add_executable(${TEST_NAME} ${TEST_SOURCE})
 
     # Link the test executable with Google Test and Corex library
-    target_link_libraries(${TEST_NAME} gtest gtest_main CoreX)
+    target_link_libraries(${TEST_NAME} gtest gtest_main CoreX gmock)
 
     # Add test to CTest
     add_test(${TEST_NAME} ${TEST_NAME})

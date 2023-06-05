@@ -1,4 +1,4 @@
-#include <CoreX/core.hpp>
+#include <CoreX/CoreX.hpp>
 #include <any>
 #include <gtest/gtest.h>
 #include <type_traits>

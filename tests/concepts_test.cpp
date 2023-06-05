@@ -1,4 +1,4 @@
-#include <CoreX/core.hpp>
+#include <CoreX/CoreX.hpp>
 #include <gtest/gtest.h>
 
 TEST(TestConcepts, TestIsSame) {

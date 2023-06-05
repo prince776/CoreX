@@ -1,5 +1,5 @@
 #include "CoreX/iterator.hpp"
-#include <CoreX/core.hpp>
+#include <CoreX/CoreX.hpp>
 #include <gtest/gtest.h>
 
 TEST(TestIterator, TestForwardIterator) {
