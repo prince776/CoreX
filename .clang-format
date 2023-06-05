@@ -21,3 +21,4 @@ AllowAllArgumentsOnNextLine: false
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: true
 AlignArrayOfStructures: Right
+BreakConstructorInitializers: BeforeColon
