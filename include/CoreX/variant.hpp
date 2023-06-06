@@ -5,9 +5,6 @@
 #include <cassert>
 
 template <typename... Ts>
-class Variant;
-
-template <typename... Ts>
 class TypeSequence {};
 
 template <size_t N, typename T, typename... Ts>
@@ -47,7 +44,7 @@ concept no_ambigious_type = !ContainsDuplicateTemplateParam<T, Ts...>();
 
 template <typename T, typename... Ts>
     requires(no_ambigious_type<T, Ts...>)
-class Variant<T, Ts...> {
+class Variant {
   public:
     using FirstType = variant_alternative_t<0, T, Ts...>;
 
@@ -59,7 +56,7 @@ class Variant<T, Ts...> {
     template <typename Arg>
     constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
-        *((Arg*)data) = move(arg);
+        *((Arg*)data) = arg;
     }
 
     ~Variant() noexcept {
@@ -96,7 +93,7 @@ class Variant<T, Ts...> {
     }
 
     template <typename Arg>
-    [[nodiscard]] constexpr bool holdsAlternative() noexcept {
+    [[nodiscard]] constexpr bool holdsAlternative() const noexcept {
         if (activeVariant == InvalidVariant) {
             return false;
         }
