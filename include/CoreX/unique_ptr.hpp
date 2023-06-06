@@ -77,11 +77,11 @@ class UniquePtr {
         return *get();
     }
 
-  public:
-    Alloc allocator;
-
   private:
     Blk data;
+
+  public:
+    Alloc allocator;
 };
 
 template <typename T, Allocator Alloc>
@@ -173,11 +173,11 @@ class UniquePtr<T[], Alloc> {
         return data.size / sizeof(T);
     }
 
-  public:
-    Alloc allocator;
-
   private:
     Blk data;
+
+  public:
+    Alloc allocator;
 };
 
 template <typename T, Allocator Alloc, typename... Args>

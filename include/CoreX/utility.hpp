@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <utility>
 
+constexpr size_t npos = static_cast<size_t>(-1);
+
 template <typename T>
 [[nodiscard]] constexpr T&& forward(remove_reference_t<T>&& t) noexcept {
     return static_cast<T&&>(t);
@@ -20,19 +22,31 @@ template <typename T>
 }
 
 template <typename T>
-[[nodiscard]] constexpr const T& min(const T& a, const T& b) noexcept {
-    if (a < b) {
-        return a;
-    }
-    return b;
+[[nodiscard]] constexpr T max(const T& t) noexcept {
+    return t;
 }
 
 template <typename T>
-[[nodiscard]] constexpr const T& max(const T& a, const T& b) noexcept {
-    if (a > b) {
-        return a;
+[[nodiscard]] constexpr T min(const T& t) noexcept {
+    return t;
+}
+
+template <typename T, typename... Ts>
+[[nodiscard]] constexpr T max(const T& t, Ts&&... ts) noexcept {
+    auto res = max(forward<Ts>(ts)...);
+    if (t > res) {
+        return t;
     }
-    return b;
+    return res;
+}
+
+template <typename T, typename... Ts>
+[[nodiscard]] constexpr T min(const T& t, Ts&&... ts) noexcept {
+    auto res = min(forward<Ts>(ts)...);
+    if (t < res) {
+        return t;
+    }
+    return res;
 }
 
 template <typename T>

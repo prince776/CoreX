@@ -7,3 +7,4 @@
 #include <CoreX/type_traits.hpp>
 #include <CoreX/unique_ptr.hpp>
 #include <CoreX/utility.hpp>
+#include <CoreX/variant.hpp>
