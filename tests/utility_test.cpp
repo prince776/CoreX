@@ -28,11 +28,16 @@ TEST(TestUtility, TestMove) {
 TEST(TestUtility, TestMin) {
     EXPECT_EQ(5, min(5, 10));
     EXPECT_EQ(5, min(10, 5));
+    EXPECT_EQ(5, min(10, 11, 12, 15, 5));
+    EXPECT_EQ(5, min(10, 100, 121, 5));
 }
 
 TEST(TestUtility, TestMax) {
     EXPECT_EQ(10, max(5, 10));
     EXPECT_EQ(10, max(10, 5));
+    EXPECT_EQ(10, max(10, 1, 2, 3, 4, 5));
+    EXPECT_EQ(10, max(10, 5, 6, 9, 5));
+    EXPECT_EQ(10, max(10, 10, 5));
 }
 
 TEST(TestUtility, TestSwap) {
