@@ -57,9 +57,30 @@ class Variant<T, Ts...> {
     }
 
     template <typename Arg>
-    constexpr Variant(Arg&& arg) noexcept {
+    constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
-        new ((Arg*)data) Arg(forward<Arg>(arg));
+        *((Arg*)data) = move(arg);
+    }
+
+    ~Variant() noexcept {
+        destructorHelper<0, T, Ts...>(activeVariant);
+    }
+
+    Variant(const Variant<T, Ts...>& v) noexcept {
+        destructorHelper<0, T, Ts...>(activeVariant);
+        activeVariant = v.activeVariant;
+        for (size_t i = 0; i < size; i++) {
+            data[i] = v.data[i];
+        }
+    }
+
+    Variant& operator=(const Variant<T, Ts...>& v) noexcept {
+        destructorHelper<0, T, Ts...>(activeVariant);
+        activeVariant = v.activeVariant;
+        for (size_t i = 0; i < size; i++) {
+            data[i] = v.data[i];
+        }
+        return *this;
     }
 
     template <typename Arg>
@@ -87,6 +108,19 @@ class Variant<T, Ts...> {
     }
 
     static constexpr int InvalidVariant = -1;
+
+  private:
+    template <size_t currVariant, typename Arg, typename... Args>
+    void destructorHelper(int selectedVariant) {
+        if (selectedVariant == currVariant) {
+            return ((Arg*)(data))->~Arg();
+        } else {
+            destructorHelper<currVariant + 1, Args...>(selectedVariant);
+        }
+    }
+    template <size_t>
+    void destructorHelper(int) {
+    }
 
   private:
     enum : size_t {

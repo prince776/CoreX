@@ -23,6 +23,17 @@ TEST(TestVariant, TestContainsDuplicateTemplTestVarianeateParams) {
     EXPECT_EQ(true, containsDup);
 }
 
+int destructorCalled = 0; // use only once.
+struct Temp {
+    int x, y;
+    Temp(int x, int y) : x(x), y(y) {
+    }
+
+    ~Temp() {
+        destructorCalled++;
+    }
+};
+
 TEST(TestVariant, VariantTests) {
     {
         Variant<int, double> v1;
@@ -60,35 +71,40 @@ TEST(TestVariant, VariantTests) {
         EXPECT_FLOAT_EQ(100.0, v2.get<double>());
     }
     {
-        struct Temp {
-            int x, y;
-            Temp(int x, int y) : x(x), y(y) {
-            }
-        };
 
-        Variant<float, int, Temp, char> v = Temp{1, 2};
+        Temp temp = {1, 2};
+        {
+            Variant<float, int, Temp, char> v = temp;
 
-        EXPECT_EQ(true, v.holdsAlternative<Temp>());
+            EXPECT_EQ(true, v.holdsAlternative<Temp>());
 
-        auto& t = v.get<Temp>();
+            auto& t = v.get<Temp>();
 
-        EXPECT_EQ(1, t.x);
-        EXPECT_EQ(2, t.y);
+            EXPECT_EQ(1, t.x);
+            EXPECT_EQ(2, t.y);
 
-        v = 'h';
+            t.x = 6;
 
-        EXPECT_EQ(true, v.holdsAlternative<char>());
-        EXPECT_EQ(false, v.holdsAlternative<Temp>());
+            auto& t2 = v.get<Temp>();
+            EXPECT_EQ(6, t2.x);
 
-        EXPECT_EQ('h', v.get<char>());
+            v = 'h';
 
-        struct ExpectVariantLayout {
-            Temp t;
-            int activeVariant;
-        };
+            EXPECT_EQ(true, v.holdsAlternative<char>());
+            EXPECT_EQ(false, v.holdsAlternative<Temp>());
 
-        EXPECT_EQ(sizeof(ExpectVariantLayout), sizeof(v));
-        EXPECT_EQ(std::alignment_of_v<ExpectVariantLayout>,
-                  std::alignment_of_v<decltype(v)>);
+            EXPECT_EQ('h', v.get<char>());
+
+            struct ExpectVariantLayout {
+                Temp t;
+                int activeVariant;
+            };
+
+            EXPECT_EQ(sizeof(ExpectVariantLayout), sizeof(v));
+            EXPECT_EQ(std::alignment_of_v<ExpectVariantLayout>,
+                      std::alignment_of_v<decltype(v)>);
+        }
+        EXPECT_EQ(1, destructorCalled);
     }
+    EXPECT_EQ(2, destructorCalled);
 }
