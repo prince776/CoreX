@@ -48,13 +48,13 @@ class Variant {
   public:
     using FirstType = variant_alternative_t<0, T, Ts...>;
 
-    constexpr Variant() noexcept {
+    explicit constexpr Variant() noexcept {
         activeVariant = 0;
         new ((FirstType*)data) FirstType();
     }
 
     template <typename Arg>
-    constexpr Variant(const Arg& arg) noexcept {
+    explicit constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
         new ((Arg*)data) Arg(arg);
     }
