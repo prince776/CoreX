@@ -14,6 +14,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 -Wredundant-decls \
 -Wshadow \
 -Woverloaded-virtual \
+-fsanitize=address \
+-fsanitize=undefined \
+-D_GLIBCXX_DEBUG \
+-D_GLIBCXX_DEBUG_PEDANTIC \
 ")
 
 set(CMAKE_CXX_STANDARD 20)
