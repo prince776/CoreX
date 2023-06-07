@@ -74,9 +74,9 @@ class Variant {
     Variant& operator=(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
-        for (size_t i = 0; i < size; i++) {
-            data[i] = v.data[i];
-        }
+
+        // Deep copy by calling the required copy constructor.
+        copyHelper<0, T, Ts...>(activeVariant, *this, v);
         return *this;
     }
 
@@ -117,6 +117,20 @@ class Variant {
     }
     template <size_t>
     void destructorHelper(int) {
+    }
+
+    template <size_t currVariant, typename Arg, typename... Args>
+    void copyHelper(int selectedVariant,
+                    Variant<T, Ts...>& lhs,
+                    Variant<T, Ts...>& rhs) {
+        if (selectedVariant == currVariant) {
+            new ((Arg*)lhs.data) Arg(*((Arg*)rhs.data));
+        } else {
+            copyHelper<currVariant + 1, Args...>(selectedVariant, lhs, rhs);
+        }
+    }
+    template <size_t>
+    void copyHelper(int, Variant<T, Ts...>&, Variant<T, Ts...>&) {
     }
 
   private:
