@@ -63,7 +63,7 @@ class Variant {
         destructorHelper<0, T, Ts...>(activeVariant);
     }
 
-    Variant(const Variant<T, Ts...>& v) noexcept {
+    explicit Variant(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
         for (size_t i = 0; i < size; i++) {
@@ -89,7 +89,7 @@ class Variant {
         assert(selectedVariant == activeVariant);
 
         using ActiveType = variant_alternative_t<selectedVariant, T, Ts...>;
-        return *((ActiveType*)(data));
+        return *((ActiveType*)data);
     }
 
     template <typename Arg>

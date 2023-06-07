@@ -130,3 +130,10 @@ TEST(TestVariant, VariantTests) {
     }
     EXPECT_EQ(2, destructorCalled);
 }
+
+TEST(TestVariant, DynamicObjects) {
+    Variant<int, std::string, bool> v(std::string("test"));
+
+    EXPECT_EQ(true, v.holdsAlternative<std::string>());
+    EXPECT_EQ(std::string("test"), v.get<std::string>());
+}

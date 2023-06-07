@@ -32,15 +32,15 @@ concept ResultErrorProcessor = requires(Fn fn, E1& e1, E2 e2) {
 template <typename T, typename E>
 class Result {
   private:
-    Result() = default;
+    Result(const E& e, bool) : data(e) {
+    }
 
   public:
     Result(const T& t) : data(t) {
     }
 
     static Result FromErr(const E& e) {
-        Result res;
-        res.data = e;
+        Result res(e, true);
         return res;
     }
 
@@ -94,16 +94,16 @@ class Result {
 template <typename T>
 class Result<T, T> {
   private:
-    Result() = default;
+    Result(const T& e, bool) : data(e) {
+        hasErr = true;
+    }
 
   public:
     Result(const T& t) : data(t), hasErr(false) {
     }
 
     static Result FromErr(const T& e) {
-        Result res;
-        res.data   = e;
-        res.hasErr = true;
+        Result res(e, true);
         return res;
     }
 
