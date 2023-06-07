@@ -54,6 +54,8 @@ class Variant {
     }
 
     template <typename Arg>
+        requires(FindTemplateParamIndex<Arg, T, Ts...>() !=
+                 static_cast<size_t>(-1))
     explicit constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
         new ((Arg*)data) Arg(arg);
@@ -66,9 +68,8 @@ class Variant {
     explicit Variant(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
-        for (size_t i = 0; i < size; i++) {
-            data[i] = v.data[i];
-        }
+        // Deep copy by calling the required copy constructor.
+        copyHelper<0, T, Ts...>(activeVariant, *this, v);
     }
 
     Variant& operator=(const Variant<T, Ts...>& v) noexcept {
@@ -108,7 +109,7 @@ class Variant {
 
   private:
     template <size_t currVariant, typename Arg, typename... Args>
-    void destructorHelper(int selectedVariant) {
+    void destructorHelper(int selectedVariant) noexcept {
         if (selectedVariant == currVariant) {
             return ((Arg*)(data))->~Arg();
         } else {
@@ -116,13 +117,12 @@ class Variant {
         }
     }
     template <size_t>
-    void destructorHelper(int) {
+    void destructorHelper(int) noexcept {
     }
 
     template <size_t currVariant, typename Arg, typename... Args>
-    void copyHelper(int selectedVariant,
-                    Variant<T, Ts...>& lhs,
-                    Variant<T, Ts...>& rhs) {
+    void
+    copyHelper(int selectedVariant, Variant& lhs, const Variant& rhs) noexcept {
         if (selectedVariant == currVariant) {
             new ((Arg*)lhs.data) Arg(*((Arg*)rhs.data));
         } else {
@@ -130,7 +130,7 @@ class Variant {
         }
     }
     template <size_t>
-    void copyHelper(int, Variant<T, Ts...>&, Variant<T, Ts...>&) {
+    void copyHelper(int, Variant&, const Variant&) noexcept {
     }
 
   private:
