@@ -8,16 +8,14 @@ TEST(TestResult, BasicTests) {
 
         EXPECT_EQ(false, res.hasError());
 
-        auto val = res.value();
-        EXPECT_EQ(5, val);
+        EXPECT_EQ(5, res.value());
     }
     {
         auto res = Result<int, std::string>::FromErr("dummy err");
 
         EXPECT_EQ(true, res.hasError());
 
-        auto val = res.error();
-        EXPECT_EQ(std::string("dummy err"), val);
+        EXPECT_EQ(std::string("dummy err"), res.error());
     }
     {
         Result<int, int> r = 5;
