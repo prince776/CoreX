@@ -132,8 +132,21 @@ TEST(TestVariant, VariantTests) {
 }
 
 TEST(TestVariant, DynamicObjects) {
-    Variant<int, std::string, bool> v(std::string("test"));
+    {
+        Variant<int, std::string, bool> v(std::string("test"));
 
-    EXPECT_EQ(true, v.holdsAlternative<std::string>());
-    EXPECT_EQ(std::string("test"), v.get<std::string>());
+        EXPECT_EQ(true, v.holdsAlternative<std::string>());
+        EXPECT_EQ(std::string("test"), v.get<std::string>());
+    }
+    {
+        Variant<int, std::string> v(5);
+
+        EXPECT_EQ(true, v.holdsAlternative<int>());
+        EXPECT_EQ(5, v.get<int>());
+
+        v = std::string("err");
+
+        EXPECT_EQ(true, v.holdsAlternative<std::string>());
+        EXPECT_EQ(std::string("err"), v.get<std::string>());
+    }
 }
