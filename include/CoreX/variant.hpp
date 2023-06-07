@@ -56,7 +56,7 @@ class Variant {
     template <typename Arg>
         requires(FindTemplateParamIndex<Arg, T, Ts...>() !=
                  static_cast<size_t>(-1))
-    explicit constexpr Variant(const Arg& arg) noexcept {
+    constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
         new ((Arg*)data) Arg(arg);
     }
@@ -65,7 +65,7 @@ class Variant {
         destructorHelper<0, T, Ts...>(activeVariant);
     }
 
-    explicit Variant(const Variant<T, Ts...>& v) noexcept {
+    Variant(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
         // Deep copy by calling the required copy constructor.
