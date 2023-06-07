@@ -56,7 +56,7 @@ class Variant {
     template <typename Arg>
     constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
-        *((Arg*)data) = arg;
+        new ((Arg*)data) Arg(arg);
     }
 
     ~Variant() noexcept {
