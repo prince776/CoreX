@@ -71,10 +71,32 @@ TEST(TestVariant, VariantTests) {
         EXPECT_FLOAT_EQ(100.0, v2.get<double>());
     }
     {
+        Variant<double, int, std::string> v2{std::string("test string")};
+
+        bool isInt    = v2.holdsAlternative<int>();
+        bool isDouble = v2.holdsAlternative<double>();
+
+        EXPECT_EQ(false, isInt);
+        EXPECT_EQ(false, isDouble);
+        EXPECT_EQ(true, v2.holdsAlternative<std::string>());
+
+        EXPECT_EQ(std::string("test string"), v2.get<std::string>());
+
+        v2 = 100.0;
+
+        isInt    = v2.holdsAlternative<int>();
+        isDouble = v2.holdsAlternative<double>();
+
+        EXPECT_EQ(false, isInt);
+        EXPECT_EQ(true, isDouble);
+
+        EXPECT_FLOAT_EQ(100.0, v2.get<double>());
+    }
+    {
 
         Temp temp = {1, 2};
         {
-            Variant<float, int, Temp, char> v = temp;
+            Variant<float, int, Temp, char> v(temp);
 
             EXPECT_EQ(true, v.holdsAlternative<Temp>());
 
@@ -107,4 +129,24 @@ TEST(TestVariant, VariantTests) {
         EXPECT_EQ(1, destructorCalled);
     }
     EXPECT_EQ(2, destructorCalled);
+}
+
+TEST(TestVariant, DynamicObjects) {
+    {
+        Variant<int, std::string, bool> v(std::string("test"));
+
+        EXPECT_EQ(true, v.holdsAlternative<std::string>());
+        EXPECT_EQ(std::string("test"), v.get<std::string>());
+    }
+    {
+        Variant<int, std::string> v(5);
+
+        EXPECT_EQ(true, v.holdsAlternative<int>());
+        EXPECT_EQ(5, v.get<int>());
+
+        v = std::string("err");
+
+        EXPECT_EQ(true, v.holdsAlternative<std::string>());
+        EXPECT_EQ(std::string("err"), v.get<std::string>());
+    }
 }

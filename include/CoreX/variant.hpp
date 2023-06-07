@@ -5,9 +5,6 @@
 #include <cassert>
 
 template <typename... Ts>
-class Variant;
-
-template <typename... Ts>
 class TypeSequence {};
 
 template <size_t N, typename T, typename... Ts>
@@ -47,19 +44,21 @@ concept no_ambigious_type = !ContainsDuplicateTemplateParam<T, Ts...>();
 
 template <typename T, typename... Ts>
     requires(no_ambigious_type<T, Ts...>)
-class Variant<T, Ts...> {
+class Variant {
   public:
     using FirstType = variant_alternative_t<0, T, Ts...>;
 
-    constexpr Variant() noexcept {
+    explicit constexpr Variant() noexcept {
         activeVariant = 0;
         new ((FirstType*)data) FirstType();
     }
 
     template <typename Arg>
+        requires(FindTemplateParamIndex<Arg, T, Ts...>() !=
+                 static_cast<size_t>(-1))
     constexpr Variant(const Arg& arg) noexcept {
         activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
-        *((Arg*)data) = move(arg);
+        new ((Arg*)data) Arg(arg);
     }
 
     ~Variant() noexcept {
@@ -69,17 +68,16 @@ class Variant<T, Ts...> {
     Variant(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
-        for (size_t i = 0; i < size; i++) {
-            data[i] = v.data[i];
-        }
+        // Deep copy by calling the required copy constructor.
+        copyHelper<0, T, Ts...>(activeVariant, *this, v);
     }
 
     Variant& operator=(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
-        for (size_t i = 0; i < size; i++) {
-            data[i] = v.data[i];
-        }
+
+        // Deep copy by calling the required copy constructor.
+        copyHelper<0, T, Ts...>(activeVariant, *this, v);
         return *this;
     }
 
@@ -92,11 +90,11 @@ class Variant<T, Ts...> {
         assert(selectedVariant == activeVariant);
 
         using ActiveType = variant_alternative_t<selectedVariant, T, Ts...>;
-        return *((ActiveType*)(data));
+        return *((ActiveType*)data);
     }
 
     template <typename Arg>
-    [[nodiscard]] constexpr bool holdsAlternative() noexcept {
+    [[nodiscard]] constexpr bool holdsAlternative() const noexcept {
         if (activeVariant == InvalidVariant) {
             return false;
         }
@@ -111,7 +109,7 @@ class Variant<T, Ts...> {
 
   private:
     template <size_t currVariant, typename Arg, typename... Args>
-    void destructorHelper(int selectedVariant) {
+    void destructorHelper(int selectedVariant) noexcept {
         if (selectedVariant == currVariant) {
             return ((Arg*)(data))->~Arg();
         } else {
@@ -119,7 +117,20 @@ class Variant<T, Ts...> {
         }
     }
     template <size_t>
-    void destructorHelper(int) {
+    void destructorHelper(int) noexcept {
+    }
+
+    template <size_t currVariant, typename Arg, typename... Args>
+    void
+    copyHelper(int selectedVariant, Variant& lhs, const Variant& rhs) noexcept {
+        if (selectedVariant == currVariant) {
+            new ((Arg*)lhs.data) Arg(*((Arg*)rhs.data));
+        } else {
+            copyHelper<currVariant + 1, Args...>(selectedVariant, lhs, rhs);
+        }
+    }
+    template <size_t>
+    void copyHelper(int, Variant&, const Variant&) noexcept {
     }
 
   private:

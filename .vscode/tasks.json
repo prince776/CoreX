@@ -2,10 +2,22 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build",
+      "label": "Clean",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/clean.sh"]
+    },
+    {
+      "label": "Debug Build",
       "type": "shell",
       "command": "bash",
       "args": ["${workspaceFolder}/build.sh"]
+    },
+    {
+      "label": "Release Build",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/build.sh", "-c", "Release"]
     },
     {
       "label": "Run Tests",
@@ -14,16 +26,16 @@
       "args": ["${workspaceFolder}/run-tests.sh"]
     },
     {
-      "label": "Build & Run Tests",
+      "label": "Debug Build & Run Tests",
       "type": "shell",
-      "command": "bash",
-      "args": ["${workspaceFolder}/build-and-run.sh"]
+      "dependsOn": ["Debug Build", "Run Tests"],
+      "dependsOrder": "sequence"
     },
     {
-      "label": "Clean",
+      "label": "Release Build & Run Tests",
       "type": "shell",
-      "command": "bash",
-      "args": ["${workspaceFolder}/clean.sh"]
+      "dependsOn": ["Release Build", "Run Tests"],
+      "dependsOrder": "sequence"
     }
   ]
 }
