@@ -124,6 +124,6 @@ class Variant {
         size = max(sizeof(T), sizeof(Ts)...)
     };
 
-    alignas(T) alignas(Ts...) char data[size];
+    alignas(T) alignas(Ts...) char data[size + 20];
     int activeVariant{-1};
 };
