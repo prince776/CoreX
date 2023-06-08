@@ -72,3 +72,49 @@ struct is_same<T, T> {
 
 template <typename T, typename U>
 inline constexpr bool is_same_v = is_same<T, U>::value;
+
+/// remove_const
+template <typename T>
+struct remove_const {
+    using type = T;
+};
+
+template <typename T>
+struct remove_const<const T> {
+    using type = T;
+};
+
+/// remove_volatile
+template <typename T>
+struct remove_volatile {
+    using type = T;
+};
+
+template <typename T>
+struct remove_volatile<volatile T> {
+    using type = T;
+};
+
+/// remove_cv
+template <typename T>
+struct remove_cv {
+    using type = T;
+};
+
+template <typename T>
+struct remove_cv<volatile T> {
+    using type = T;
+};
+
+template <typename T>
+struct remove_cv<const T> {
+    using type = T;
+};
+
+template <typename T>
+struct remove_cv<const volatile T> {
+    using type = T;
+};
+
+template <typename T>
+using remove_cv_t = typename remove_cv<T>::type;

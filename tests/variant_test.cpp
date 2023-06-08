@@ -2,6 +2,7 @@
 #include <CoreX/CoreX.hpp>
 #include <gtest/gtest.h>
 #include <type_traits>
+#include <variant>
 
 TEST(TestVariant, TestFindTemplateParamIndex) {
     size_t idx = FindTemplateParamIndex<int, char, int, bool, float>();
@@ -140,6 +141,18 @@ TEST(TestVariant, DynamicObjects) {
     }
     {
         Variant<int, std::string> v(5);
+
+        EXPECT_EQ(true, v.holdsAlternative<int>());
+        EXPECT_EQ(5, v.get<int>());
+
+        v = std::string("err");
+
+        EXPECT_EQ(true, v.holdsAlternative<std::string>());
+        EXPECT_EQ(std::string("err"), v.get<std::string>());
+    }
+    {
+        const int x = 5;
+        Variant<int, std::string> v(x);
 
         EXPECT_EQ(true, v.holdsAlternative<int>());
         EXPECT_EQ(5, v.get<int>());

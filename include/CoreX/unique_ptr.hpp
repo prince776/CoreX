@@ -184,7 +184,7 @@ template <typename T, Allocator Alloc, typename... Args>
     requires(!is_array_v<T>)
 [[nodiscard]] auto makeUnique(Alloc allocator, Args&&... args) {
     Blk blk = allocator.allocate(sizeof(T));
-    return UniquePtr<T, Alloc>(new (blk.ptr) T(forward<Args>(args)...),
+    return UniquePtr<T, Alloc>(new (blk.ptr) T(Forward<Args>(args)...),
                                allocator);
 }
 

@@ -7,33 +7,33 @@
 constexpr size_t npos = static_cast<size_t>(-1);
 
 template <typename T>
-[[nodiscard]] constexpr T&& forward(remove_reference_t<T>&& t) noexcept {
+[[nodiscard]] inline constexpr T&& Forward(remove_reference_t<T>&& t) noexcept {
     return static_cast<T&&>(t);
 }
 
 template <typename T>
-[[nodiscard]] constexpr T&& forward(remove_reference_t<T>& t) noexcept {
+[[nodiscard]] inline constexpr T&& Forward(remove_reference_t<T>& t) noexcept {
     return static_cast<T&&>(t);
 }
 
 template <typename T>
-[[nodiscard]] constexpr remove_reference_t<T>&& move(T&& t) noexcept {
+[[nodiscard]] inline constexpr remove_reference_t<T>&& Move(T&& t) noexcept {
     return static_cast<remove_reference_t<T>&&>(t);
 }
 
 template <typename T>
-[[nodiscard]] constexpr T max(const T& t) noexcept {
+[[nodiscard]] inline constexpr T Max(const T& t) noexcept {
     return t;
 }
 
 template <typename T>
-[[nodiscard]] constexpr T min(const T& t) noexcept {
+[[nodiscard]] inline constexpr T Min(const T& t) noexcept {
     return t;
 }
 
 template <typename T, typename... Ts>
-[[nodiscard]] constexpr T max(const T& t, Ts&&... ts) noexcept {
-    auto res = max(forward<Ts>(ts)...);
+[[nodiscard]] inline constexpr T Max(const T& t, Ts&&... ts) noexcept {
+    auto res = Max(Forward<Ts>(ts)...);
     if (t > res) {
         return t;
     }
@@ -41,8 +41,8 @@ template <typename T, typename... Ts>
 }
 
 template <typename T, typename... Ts>
-[[nodiscard]] constexpr T min(const T& t, Ts&&... ts) noexcept {
-    auto res = min(forward<Ts>(ts)...);
+[[nodiscard]] inline constexpr T Min(const T& t, Ts&&... ts) noexcept {
+    auto res = Min(Forward<Ts>(ts)...);
     if (t < res) {
         return t;
     }
@@ -50,8 +50,8 @@ template <typename T, typename... Ts>
 }
 
 template <typename T>
-void swap(T& a, T& b) noexcept {
-    T temp = move(a);
-    a      = move(b);
-    b      = move(temp);
+inline void Swap(T& a, T& b) noexcept {
+    T temp = Move(a);
+    a      = Move(b);
+    b      = Move(temp);
 }
