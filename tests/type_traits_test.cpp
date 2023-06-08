@@ -1,3 +1,4 @@
+#include "CoreX/type_traits.hpp"
 #include <CoreX/CoreX.hpp>
 #include <any>
 #include <gtest/gtest.h>
@@ -38,5 +39,22 @@ TEST(TestTypeTraits, TestRemoveReference) {
     EXPECT_EQ(isSame, true);
 
     isSame = std::is_same_v<int, remove_reference_t<int>>;
+    EXPECT_EQ(isSame, true);
+}
+
+TEST(TestTypeTraits, TestRemoveCV) {
+    auto isSame = std::is_same_v<int, remove_const_t<const int>>;
+    EXPECT_EQ(isSame, true);
+
+    isSame = std::is_same_v<int, remove_volatile_t<volatile int>>;
+    EXPECT_EQ(isSame, true);
+
+    isSame = std::is_same_v<int, remove_cv_t<const int>>;
+    EXPECT_EQ(isSame, true);
+
+    isSame = std::is_same_v<int, remove_cv_t<volatile int>>;
+    EXPECT_EQ(isSame, true);
+
+    isSame = std::is_same_v<int, remove_cv_t<const volatile int>>;
     EXPECT_EQ(isSame, true);
 }

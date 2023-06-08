@@ -32,7 +32,7 @@ constexpr size_t FindTemplateParamIndex() noexcept {
 template <typename T, typename... Ts>
 constexpr bool ContainsDuplicateTemplateParam() noexcept {
     if constexpr (sizeof...(Ts) > 0) {
-        return (std::is_same_v<T, Ts> || ... ||
+        return (is_same_v<T, Ts> || ... ||
                 ContainsDuplicateTemplateParam<Ts...>());
     } else {
         return false;
@@ -48,24 +48,26 @@ class Variant {
   public:
     using FirstType = variant_alternative_t<0, T, Ts...>;
 
-    explicit constexpr Variant() noexcept {
+    constexpr Variant() noexcept {
         activeVariant = 0;
         new ((FirstType*)data) FirstType();
     }
 
     template <typename Arg>
-        requires(FindTemplateParamIndex<Arg, T, Ts...>() !=
-                 static_cast<size_t>(-1))
-    constexpr Variant(const Arg& arg) noexcept {
-        activeVariant = FindTemplateParamIndex<Arg, T, Ts...>();
-        new ((Arg*)data) Arg(arg);
+        requires(FindTemplateParamIndex<remove_cv_t<remove_reference_t<Arg>>,
+                                        T,
+                                        Ts...>() != static_cast<size_t>(-1))
+    constexpr Variant(Arg&& arg) noexcept {
+        using NoCVRefArg = remove_cv_t<remove_reference_t<Arg>>;
+        activeVariant    = FindTemplateParamIndex<NoCVRefArg, T, Ts...>();
+        new ((NoCVRefArg*)data) NoCVRefArg(Forward<Arg>(arg));
     }
 
     ~Variant() noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
     }
 
-    Variant(const Variant<T, Ts...>& v) noexcept {
+    explicit Variant(const Variant<T, Ts...>& v) noexcept {
         destructorHelper<0, T, Ts...>(activeVariant);
         activeVariant = v.activeVariant;
         // Deep copy by calling the required copy constructor.
@@ -84,13 +86,7 @@ class Variant {
     template <typename Arg>
     [[nodiscard]] constexpr Arg& get() noexcept {
         assert(holdsAlternative<Arg>());
-
-        constexpr size_t selectedVariant =
-            FindTemplateParamIndex<Arg, T, Ts...>();
-        assert(selectedVariant == activeVariant);
-
-        using ActiveType = variant_alternative_t<selectedVariant, T, Ts...>;
-        return *((ActiveType*)data);
+        return *((Arg*)data);
     }
 
     template <typename Arg>
@@ -124,7 +120,11 @@ class Variant {
     void
     copyHelper(int selectedVariant, Variant& lhs, const Variant& rhs) noexcept {
         if (selectedVariant == currVariant) {
+            // I know what I am doing, OR NOT?
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
             new ((Arg*)lhs.data) Arg(*((Arg*)rhs.data));
+#pragma GCC diagnostic pop
         } else {
             copyHelper<currVariant + 1, Args...>(selectedVariant, lhs, rhs);
         }
@@ -135,7 +135,7 @@ class Variant {
 
   private:
     enum : size_t {
-        size = max(sizeof(T), sizeof(Ts)...)
+        size = Max(sizeof(T), sizeof(Ts)...)
     };
 
     alignas(T) alignas(Ts...) char data[size];
