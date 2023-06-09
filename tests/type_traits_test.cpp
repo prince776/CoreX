@@ -58,3 +58,11 @@ TEST(TestTypeTraits, TestRemoveCV) {
     isSame = std::is_same_v<int, remove_cv_t<const volatile int>>;
     EXPECT_EQ(isSame, true);
 }
+
+TEST(TestTypeTraits, TestRemoveCVRef) {
+    auto isSame = std::is_same_v<int, remove_cvref_t<const volatile int&>>;
+    EXPECT_EQ(isSame, true);
+
+    isSame = std::is_same_v<int, remove_cvref_t<const volatile int&&>>;
+    EXPECT_EQ(isSame, true);
+}

@@ -3,6 +3,8 @@
 #include "CoreX/type_traits.hpp"
 #include "CoreX/utility.hpp"
 #include <CoreX/allocator.hpp>
+#include <CoreX/error.hpp>
+#include <CoreX/reference.hpp>
 #include <cassert>
 
 template <typename T, Allocator Alloc = Mallocator>
@@ -64,17 +66,21 @@ class UniquePtr {
     [[nodiscard]] const T* operator->() const noexcept {
         return get();
     }
-    [[nodiscard]] const T& operator*() const noexcept {
-        assert(data.ptr != nullptr);
-        return *get();
+    [[nodiscard]] Res<Ref<const T>> operator*() const noexcept {
+        if (get() == nullptr) {
+            return Err<Ref<const T>>(Error::NullptrDereference);
+        }
+        return Ref<const T>(*get());
     }
 
     [[nodiscard]] T* operator->() noexcept {
         return get();
     }
-    [[nodiscard]] T& operator*() noexcept {
-        assert(data.ptr != nullptr);
-        return *get();
+    [[nodiscard]] Res<Ref<T>> operator*() noexcept {
+        if (get() == nullptr) {
+            return Err<Ref<T>>(Error::NullptrDereference);
+        }
+        return Ref<T>(*get());
     }
 
   private:
@@ -147,26 +153,34 @@ class UniquePtr<T[], Alloc> {
     [[nodiscard]] const T* operator->() const noexcept {
         return get();
     }
-    [[nodiscard]] const T& operator*() const noexcept {
-        assert(data.ptr != nullptr);
-        return *get();
+    [[nodiscard]] Res<Ref<const T>> operator*() const noexcept {
+        if (get() == nullptr) {
+            return Err<Ref<const T>>(Error::NullptrDereference);
+        }
+        return Ref<const T>(*get());
     }
 
     [[nodiscard]] T* operator->() noexcept {
         return get();
     }
-    [[nodiscard]] T& operator*() noexcept {
-        assert(data.ptr != nullptr);
-        return *get();
+    [[nodiscard]] Res<Ref<T>> operator*() noexcept {
+        if (get() == nullptr) {
+            return Err<Ref<T>>(Error::NullptrDereference);
+        }
+        return Ref<T>(*get());
     }
 
-    [[nodiscard]] const T& operator[](size_t index) const noexcept {
-        assert(index < size());
-        return get()[index];
+    [[nodiscard]] Res<Ref<const T>> operator[](size_t index) const noexcept {
+        if (index >= size()) {
+            return Err<Ref<const T>>(Error::NullptrDereference);
+        }
+        return Ref<const T>(get()[index]);
     }
-    [[nodiscard]] T& operator[](size_t index) noexcept {
-        assert(index < size());
-        return get()[index];
+    [[nodiscard]] Res<Ref<T>> operator[](size_t index) noexcept {
+        if (index >= size()) {
+            return Err<Ref<T>>(Error::NullptrDereference);
+        }
+        return Ref<T>(get()[index]);
     }
 
     [[nodiscard]] size_t size() const noexcept {
@@ -182,7 +196,7 @@ class UniquePtr<T[], Alloc> {
 
 template <typename T, Allocator Alloc, typename... Args>
     requires(!is_array_v<T>)
-[[nodiscard]] auto makeUnique(Alloc allocator, Args&&... args) {
+[[nodiscard]] auto makeUnique(Alloc& allocator, Args&&... args) {
     Blk blk = allocator.allocate(sizeof(T));
     return UniquePtr<T, Alloc>(new (blk.ptr) T(Forward<Args>(args)...),
                                allocator);
@@ -190,7 +204,7 @@ template <typename T, Allocator Alloc, typename... Args>
 
 template <typename T, Allocator Alloc>
     requires(is_array_v<T>)
-auto makeUnique(Alloc allocator, size_t num) {
+auto makeUnique(Alloc& allocator, size_t num) {
     using BaseType = remove_extent_t<T>;
 
     Blk blk = allocator.allocate(sizeof(BaseType) * num);
