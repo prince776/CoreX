@@ -1,7 +1,9 @@
 #pragma once
 
 #include <CoreX/allocator.hpp>
+#include <CoreX/error.hpp>
 #include <CoreX/iterator.hpp>
+#include <CoreX/reference.hpp>
 #include <cassert>
 
 template <typename T, size_t _size>
@@ -31,13 +33,17 @@ class Array {
         return &data[0] + size();
     }
 
-    [[nodiscard]] T& operator[](size_t idx) noexcept {
-        assert(idx < size());
-        return data[idx];
+    [[nodiscard]] Res<Ref<T>> operator[](size_t idx) noexcept {
+        if (idx >= size()) {
+            return Err<Ref<T>>(Error::OutOfBounds);
+        }
+        return Ref(data[idx]);
     }
-    [[nodiscard]] const T& operator[](size_t idx) const noexcept {
-        assert(idx < size());
-        return data[idx];
+    [[nodiscard]] Res<Ref<const T>> operator[](size_t idx) const noexcept {
+        if (idx >= size()) {
+            return Err<Ref<const T>>(Error::OutOfBounds);
+        }
+        return Ref<const T>(data[idx]);
     }
 
     template <size_t otherSize>

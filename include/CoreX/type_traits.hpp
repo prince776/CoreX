@@ -124,3 +124,7 @@ struct remove_cv<const volatile T> {
 
 template <typename T>
 using remove_cv_t = typename remove_cv<T>::type;
+
+/// remove_cvref_t
+template <typename T>
+using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;

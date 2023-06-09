@@ -1,3 +1,5 @@
+#include "CoreX/allocator.hpp"
+#include "CoreX/unique_ptr.hpp"
 #include <CoreX/CoreX.hpp>
 #include <cstdlib>
 #include <gtest/gtest.h>
@@ -33,17 +35,18 @@ class TrackedMallocator {
 TEST(TestUniquePtr, NonArray) {
     uint64_t allocatedAddr{};
     {
-        int val  = 6;
-        auto ptr = makeUnique<int>(TrackedMallocator{}, val);
+        int val = 6;
+        TrackedMallocator trackedMallocator;
+        auto ptr = makeUnique<int>(trackedMallocator, val);
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
         EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(int));
 
-        EXPECT_EQ(val, *ptr);
-        val  = 10;
-        *ptr = val;
-        EXPECT_EQ(val, *ptr);
+        EXPECT_EQ(val, (*ptr).value().get());
+        val                  = 10;
+        (*ptr).value().get() = val;
+        EXPECT_EQ(val, (*ptr).value().get());
 
         // Check for free.
         ptr.~UniquePtr();
@@ -56,7 +59,8 @@ TEST(TestUniquePtr, NonArray) {
             Temp(int x, int y) : x(x), y(y) {
             }
         };
-        auto ptr = makeUnique<Temp>(TrackedMallocator{}, 4, 5);
+        TrackedMallocator trackedMallocator;
+        auto ptr = makeUnique<Temp>(trackedMallocator, 4, 5);
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
@@ -80,19 +84,20 @@ TEST(TestUniquePtr, NonArray) {
 TEST(TestUniquePtr, Array) {
     uint64_t allocatedAddr{};
     {
-        int num  = 6;
-        auto ptr = makeUnique<int[]>(TrackedMallocator{}, num);
+        int num = 6;
+        TrackedMallocator trackedMallocator;
+        auto ptr = makeUnique<int[]>(trackedMallocator, num);
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
         EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(int) * num);
 
-        EXPECT_EQ(0, *ptr);
-        *ptr   = 1;
-        ptr[1] = 2;
+        EXPECT_EQ(0, (*ptr).value().get());
+        (*ptr).value().get() = 1;
+        ptr[1].value().get() = 2;
 
-        EXPECT_EQ(1, ptr[0]);
-        EXPECT_EQ(2, ptr[1]);
+        EXPECT_EQ(1, ptr[0].value().get());
+        EXPECT_EQ(2, ptr[1].value().get());
 
         // Check for free.
         ptr.~UniquePtr();
@@ -106,26 +111,42 @@ TEST(TestUniquePtr, Array) {
             }
         };
 
-        int num  = 6;
-        auto ptr = makeUnique<Temp[]>(TrackedMallocator{}, num);
+        int num = 6;
+        TrackedMallocator trackedMallocator;
+        auto ptr = makeUnique<Temp[]>(trackedMallocator, num);
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
         EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(Temp) * num);
 
         for (int i = 0; i < 5; i++) {
-            EXPECT_EQ(4, ptr[i].x);
-            EXPECT_EQ(5, ptr[i].y);
+            EXPECT_EQ(4, ptr[i].value().get().x);
+            EXPECT_EQ(5, ptr[i].value().get().y);
         }
 
-        ptr[1].x = 10;
-        ptr[2].y = 12;
+        ptr[1].value().get().x = 10;
+        ptr[2].value().get().y = 12;
 
-        EXPECT_EQ(10, ptr[1].x);
-        EXPECT_EQ(12, ptr[2].y);
+        EXPECT_EQ(10, ptr[1].value().get().x);
+        EXPECT_EQ(12, ptr[2].value().get().y);
 
         // Check for free.
         ptr.~UniquePtr();
         EXPECT_EQ(false, ptr.allocator.memTracker.contains(allocatedAddr));
+    }
+    {
+        int* x = nullptr;
+        Mallocator m;
+        auto ptr            = UniquePtr<int>(x, m);
+        auto dereferenceRes = *ptr;
+
+        EXPECT_EQ(Error::NullptrDereference, dereferenceRes.error());
+    }
+    {
+        Mallocator m;
+        auto ptr = makeUnique<int[]>(m, 5);
+
+        auto res = ptr[5];
+        EXPECT_EQ(Error::NullptrDereference, res.error());
     }
 }
