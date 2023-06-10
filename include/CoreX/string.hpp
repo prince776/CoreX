@@ -135,7 +135,7 @@ class String {
 
     [[nodiscard]] String substr(size_t offset, size_t size) noexcept {
         if (offset > this->size()) {
-            return String("");
+            return String("", data.getAllocator());
         }
         size = Min(size, this->size() - offset);
         String res(size, data.getAllocator());
