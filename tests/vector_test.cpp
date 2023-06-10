@@ -58,4 +58,15 @@ TEST(TestVector, BasicTests) {
             EXPECT_EQ(10, x);
         }
     }
+    {
+        Vector<int> a;
+        for (int i = 0; i < 10; i++) {
+            a.push_back(10);
+        }
+
+        EXPECT_EQ(10, a.size());
+        for (auto v : a) {
+            EXPECT_EQ(10, v);
+        }
+    }
 }
