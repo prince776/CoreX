@@ -40,10 +40,7 @@ class Vector {
 
         // reset before to make sure old allocator is used for deallocation.
         data.reset();
-        // TODO: allocator is not being reassigned in copy constructor because
-        // it's a reference. Solution was supposed to be Ref<T>, doesn't work
-        // for some reason.
-        // allocator = v.allocator;
+        allocator = v.allocator;
 
         auto newData = makeUnique<T[], Alloc>(allocator, capacity);
         data         = Move(newData);

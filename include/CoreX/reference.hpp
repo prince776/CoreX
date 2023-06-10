@@ -3,7 +3,7 @@
 template <typename T>
 class Ref {
   public:
-    constexpr Ref(T& t) noexcept : t(t) {
+    constexpr Ref(T& t) noexcept : t(&t) {
     }
 
     constexpr operator T&() const noexcept {
@@ -11,12 +11,13 @@ class Ref {
     }
 
     constexpr T& get() const noexcept {
-        return t;
+        assert(t != nullptr);
+        return *t;
     }
 
     [[nodiscard]] constexpr Ref(const Ref& other) noexcept            = default;
     [[nodiscard]] constexpr Ref& operator=(const Ref& other) noexcept = default;
 
   private:
-    T& t;
+    T* t;
 };
