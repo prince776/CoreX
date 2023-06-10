@@ -61,7 +61,7 @@ class UniquePtr {
         return (T*)data.ptr;
     }
     [[nodiscard]] const T* get() const noexcept {
-        return (T*)data.ptr;
+        return (const T*)data.ptr;
     }
 
     // Operator overloads.

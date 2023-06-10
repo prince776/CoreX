@@ -28,13 +28,9 @@ class Vector {
 
     Vector(const Vector<T, Alloc>& v) noexcept
         : m_size(v.size()), capacity(v.capacity), allocator(v.allocator) {
-        // reset before to make sure old allocator is used for deallocation.
-        data.reset();
+        data = makeUnique<T[], Alloc>(allocator, capacity);
 
-        auto newData = makeUnique<T[], Alloc>(allocator, capacity);
-        data         = move(newData);
-
-        auto res = Copy(v.begin(), v.end(), begin(), end());
+        auto res = Copy(v.cbegin(), v.cend(), begin(), end());
         // Error handling in constructor? HOW?
         assert(!res.hasError());
     }
@@ -47,9 +43,9 @@ class Vector {
         allocator = v.allocator;
 
         auto newData = makeUnique<T[], Alloc>(allocator, capacity);
-        data         = move(newData);
+        data         = Move(newData);
 
-        auto res = Copy(v.begin(), v, end(), begin(), end());
+        auto res = Copy(v.cbegin(), v.cend(), begin(), end());
         assert(!res.hasError());
         return *this;
     }
@@ -66,14 +62,14 @@ class Vector {
     [[nodiscard]] ForwardIterator<T> begin() noexcept {
         return data.get();
     }
-    [[nodiscard]] const ForwardIterator<const T> begin() const noexcept {
+    [[nodiscard]] const ForwardIterator<const T> cbegin() const noexcept {
         return data.get();
     }
 
     [[nodiscard]] ForwardIterator<T> end() noexcept {
         return data.get() + size();
     }
-    [[nodiscard]] const ForwardIterator<const T> end() const noexcept {
+    [[nodiscard]] const ForwardIterator<const T> cend() const noexcept {
         return data.get() + size();
     }
 
@@ -107,7 +103,7 @@ class Vector {
 
     void pop_back() noexcept {
         if (size() > 0) {
-            data[m_size].value().get().~T();
+            data[m_size - 1].value().get().~T();
             m_size--;
         }
     }
@@ -129,9 +125,10 @@ class Vector {
     [[nodiscard]] bool operator==(const Vector& other) const noexcept {
         if (size() != other.size()) {
             return false;
+            
         }
-        auto it = begin(), it2 = other.begin();
-        for (; it != end(); it++, it2++) {
+        auto it = cbegin(), it2 = other.cbegin();
+        for (; it != cend(); it++, it2++) {
             if (*it != *it2) {
                 return false;
             }
@@ -144,7 +141,7 @@ class Vector {
     }
 
     void fastErase(size_t pos) noexcept {
-        if (pos > size()) {
+        if (pos >= size()) {
             return;
         }
         if (pos != size() - 1) {

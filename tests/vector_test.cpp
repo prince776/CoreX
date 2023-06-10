@@ -49,4 +49,9 @@ TEST(TestVector, BasicTests) {
         v.fastErase(0);
         EXPECT_EQ(v.size(), 2);
     }
+    {
+        Vector<int> v(5, 10);
+        auto v2 = v;
+        EXPECT_EQ(v, v2);
+    }
 }
