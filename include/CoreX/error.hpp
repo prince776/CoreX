@@ -5,6 +5,8 @@
 enum class Error : int32_t {
     OutOfBounds,
     NullptrDereference,
+    EmptyContainer,
+    ElementNotFound,
 };
 
 class Empty {};

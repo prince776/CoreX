@@ -17,6 +17,7 @@ struct Blk {
  */
 template <typename Alloc>
 concept Allocator = requires(Alloc alloc, uint64_t size) {
+    { Alloc() };
     { alloc.allocate(size) } -> same_as<Blk>;
     { alloc.deallocate(Blk{nullptr, size}) };
     { alloc.owns(Blk{nullptr, size}) } -> same_as<bool>;
@@ -43,3 +44,6 @@ class Mallocator {
         return blk.ptr != nullptr;
     }
 };
+
+template <Allocator Alloc>
+inline Alloc GlobalAlloc;

@@ -10,7 +10,7 @@ class ForwardIterator {
     using const_reference = const T&;
 
     // Constructor.
-    ForwardIterator(T* ptr) : ptr(ptr) {
+    constexpr ForwardIterator(T* ptr) : ptr(ptr) {
     }
 
     // Dereferencing.
@@ -33,6 +33,10 @@ class ForwardIterator {
         ForwardIterator temp{ptr};
         operator++();
         return temp;
+    }
+
+    [[nodiscard]] constexpr ForwardIterator<T> operator+(int x) const noexcept {
+        return ForwardIterator<T>(ptr + x);
     }
 
     // Comparision operators.
