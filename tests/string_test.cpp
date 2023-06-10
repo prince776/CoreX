@@ -49,15 +49,15 @@ TEST(TestString, BasicTests) {
         String s5 = s.substr(10, 5);
         EXPECT_EQ(String(""), s5);
     }
-    // {
-    //     String s      = "a-b-c";
-    //     auto elements = s.split('-');
+    {
+        String s      = "a-b-c";
+        auto elements = s.split('-');
 
-    //     EXPECT_EQ(3, elements.size());
-    //     EXPECT_EQ(String("a"), elements[0].value());
-    //     EXPECT_EQ(String("b"), elements[1].value());
-    //     EXPECT_EQ(String("c"), elements[2].value());
-    // }
+        EXPECT_EQ(3, elements.size());
+        EXPECT_EQ(String("a"), elements[0].value());
+        EXPECT_EQ(String("b"), elements[1].value());
+        EXPECT_EQ(String("c"), elements[2].value());
+    }
     // {
     //     String s      = "abc";
     //     auto elements = s.split('-');
