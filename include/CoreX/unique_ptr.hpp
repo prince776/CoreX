@@ -27,7 +27,7 @@ class UniquePtr {
     UniquePtr& operator=(const UniquePtr&) = delete;
 
     // Move constructors.
-    UniquePtr(UniquePtr&& rhs) {
+    UniquePtr(UniquePtr&& rhs) : allocator(rhs.allocator) {
         reset(rhs.release());
     }
     UniquePtr& operator=(UniquePtr&& rhs) {
@@ -114,7 +114,7 @@ class UniquePtr<T[], Alloc> {
     UniquePtr& operator=(const UniquePtr&) = delete;
 
     // Move constructors.
-    UniquePtr(UniquePtr&& rhs) {
+    UniquePtr(UniquePtr&& rhs) : allocator(rhs.allocator) {
         reset(rhs.release());
     }
     UniquePtr& operator=(UniquePtr&& rhs) {

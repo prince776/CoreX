@@ -47,6 +47,10 @@ class ForwardIterator {
         return !(*this == rhs);
     }
 
+    [[nodiscard]] T* get() noexcept {
+        return ptr;
+    }
+
   private:
     T* ptr;
 };

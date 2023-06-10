@@ -53,5 +53,9 @@ TEST(TestVector, BasicTests) {
         Vector<int> v(5, 10);
         auto v2 = v;
         EXPECT_EQ(v, v2);
+
+        for (const auto& x : v) {
+            EXPECT_EQ(10, x);
+        }
     }
 }

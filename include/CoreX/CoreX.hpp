@@ -9,6 +9,7 @@
 #include <CoreX/iterator.hpp>
 #include <CoreX/reference.hpp>
 #include <CoreX/result.hpp>
+#include <CoreX/string.hpp>
 #include <CoreX/type_traits.hpp>
 #include <CoreX/unique_ptr.hpp>
 #include <CoreX/utility.hpp>
