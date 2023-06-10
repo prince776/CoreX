@@ -71,7 +71,7 @@ TEST(TestVector, BasicTests) {
         }
     }
     {
-        Vector<String<>> a;
+        Vector<std::string> a;
         for (int i = 0; i < 10; i++) {
             a.push_back("test");
         }
