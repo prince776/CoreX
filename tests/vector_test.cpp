@@ -1,3 +1,4 @@
+#include "CoreX/string.hpp"
 #include <CoreX/CoreX.hpp>
 #include <gtest/gtest.h>
 
@@ -67,6 +68,17 @@ TEST(TestVector, BasicTests) {
         EXPECT_EQ(10, a.size());
         for (auto v : a) {
             EXPECT_EQ(std::string("test"), v);
+        }
+    }
+    {
+        Vector<String<>> a;
+        for (int i = 0; i < 10; i++) {
+            a.push_back("test");
+        }
+
+        EXPECT_EQ(10, a.size());
+        for (auto v : a) {
+            EXPECT_EQ(String("test"), v);
         }
     }
 }
