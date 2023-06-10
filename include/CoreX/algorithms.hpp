@@ -29,8 +29,9 @@ template <typename T1, typename T2>
 }
 
 template <typename T>
-[[nodiscard]] inline Res<size_t>
-Find(ForwardIterator<T> begin, ForwardIterator<T> end, const T& val) noexcept {
+[[nodiscard]] inline Res<size_t> Find(ForwardIterator<T> begin,
+                                      ForwardIterator<T> end,
+                                      const remove_const_t<T>& val) noexcept {
     size_t pos = 0;
     for (auto it = begin; it != end; it++) {
         if (*it == val) {

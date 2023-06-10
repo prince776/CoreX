@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CoreX/algorithms.hpp"
 #include "CoreX/allocator.hpp"
 #include <CoreX/vector.hpp>
 
@@ -129,7 +130,39 @@ class String {
     }
 
     [[nodiscard]] const char* c_str() const noexcept {
-        return begin().get();
+        return cbegin().get();
+    }
+
+    [[nodiscard]] String substr(size_t offset, size_t size) noexcept {
+        if (offset > this->size()) {
+            return String("");
+        }
+        size = Min(size, this->size() - offset);
+        String res(size, data.getAllocator());
+        for (size_t i = 0; i < size; i++) {
+            res[i].value().get() = this->operator[](i + offset).value();
+        }
+
+        return res;
+    }
+
+    [[nodiscard]] Vector<String, Alloc> split(const char delimiter) noexcept {
+        Vector<String, Alloc> res(data.getAllocator());
+        size_t l = 0;
+        auto r   = Find(cbegin(), cend(), delimiter);
+
+        while (!r.hasError()) {
+            // relatively shift it since Find returns relative to l.
+            r.value() += l;
+
+            res.push_back(substr(l, r.value() - l));
+            l = r.value() + 1;
+            r = Find(cbegin() + l, cend(), delimiter);
+        }
+
+        res.push_back(substr(l, size()));
+
+        return res;
     }
 
   private:
