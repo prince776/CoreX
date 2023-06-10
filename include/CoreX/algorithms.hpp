@@ -11,13 +11,14 @@ Fill(ForwardIterator<T> begin, ForwardIterator<T> end, const T& val) noexcept {
     }
 }
 
-template <typename T>
-[[nodiscard]] inline Res<> Copy(ForwardIterator<T> inBegin,
-                                ForwardIterator<T> inEnd,
-                                ForwardIterator<T> outBegin,
-                                ForwardIterator<T> outEnd) noexcept {
-    for (auto inIt = inBegin, outIt = outBegin; inIt != inEnd;
-         inIt++, outIt++) {
+template <typename T1, typename T2>
+[[nodiscard]] inline Res<> Copy(ForwardIterator<T1> inBegin,
+                                ForwardIterator<T1> inEnd,
+                                ForwardIterator<T2> outBegin,
+                                ForwardIterator<T2> outEnd) noexcept {
+    auto inIt  = inBegin;
+    auto outIt = outBegin;
+    for (; inIt != inEnd; inIt++, outIt++) {
         if (outIt == outEnd) {
             return Err(Error::OutOfBounds);
         }

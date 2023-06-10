@@ -22,14 +22,14 @@ class Array {
     [[nodiscard]] ForwardIterator<T> begin() noexcept {
         return &data[0];
     }
-    [[nodiscard]] const ForwardIterator<const T> begin() const noexcept {
+    [[nodiscard]] const ForwardIterator<const T> cbegin() const noexcept {
         return &data[0];
     }
 
     [[nodiscard]] ForwardIterator<T> end() noexcept {
         return &data[0] + size();
     }
-    [[nodiscard]] const ForwardIterator<const T> end() const noexcept {
+    [[nodiscard]] const ForwardIterator<const T> cend() const noexcept {
         return &data[0] + size();
     }
 

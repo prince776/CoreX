@@ -3,6 +3,7 @@
 #include <CoreX/algorithms.hpp>
 #include <CoreX/allocator.hpp>
 #include <CoreX/array.hpp>
+#include <CoreX/bitset.hpp>
 #include <CoreX/concepts.hpp>
 #include <CoreX/error.hpp>
 #include <CoreX/iterator.hpp>
