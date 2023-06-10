@@ -14,8 +14,7 @@ class String {
     }
 
     String(size_t size, Alloc& allocator = GlobalAlloc<Alloc>) noexcept
-        : data(size + 1, allocator) {
-        data.back().value().get() = '\0';
+        : data(size + 1, '\0', allocator) {
     }
 
     String(size_t size,

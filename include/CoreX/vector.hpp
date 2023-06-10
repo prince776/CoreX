@@ -170,14 +170,14 @@ class Vector {
 
         size_t minSize = Min(m_size, newSize);
         for (size_t i = 0; i < minSize; i++) {
-            newData[i].value().get() = Move(data[i].value());
+            newData[i].value().get() = std::move(data[i].value());
         }
 
         for (size_t i = minSize; i < newSize; i++) {
             newData[i].value().get() = T{};
         }
 
-        data     = Move(newData);
+        data     = std::move(newData);
         m_size   = newSize;
         capacity = newCapacity;
     }
