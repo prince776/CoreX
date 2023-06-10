@@ -11,8 +11,10 @@ template <typename T, Allocator Alloc = Mallocator>
 class UniquePtr {
   public:
     // Normal constructors.
-    UniquePtr() = default;
-    UniquePtr(T* ptr, Alloc& alloc = {})
+    UniquePtr(Alloc& alloc = GlobalAlloc<Alloc>)
+        : data(Blk{}), allocator(alloc) {
+    }
+    UniquePtr(T* ptr, Alloc& alloc = GlobalAlloc<Alloc>)
         : data(Blk{ptr, sizeof(T)}), allocator(alloc) {
     }
 
@@ -47,8 +49,12 @@ class UniquePtr {
         data.ptr    = newPtr;
         if (oldPtr) {
             oldPtr->~T();
-            allocator.deallocate(Blk{oldPtr, sizeof(T)});
+            getAllocator().deallocate(Blk{oldPtr, sizeof(T)});
         }
+    }
+
+    [[nodiscard]] Alloc& getAllocator() noexcept {
+        return allocator.get();
     }
 
     [[nodiscard]] T* get() noexcept {
@@ -85,17 +91,17 @@ class UniquePtr {
 
   private:
     Blk data;
-
-  public:
-    Alloc allocator;
+    Ref<Alloc> allocator;
 };
 
 template <typename T, Allocator Alloc>
 class UniquePtr<T[], Alloc> {
   public:
     // Normal constructors.
-    UniquePtr() = default;
-    UniquePtr(Blk blk, const Alloc& alloc = Alloc{})
+    UniquePtr(Alloc& alloc = GlobalAlloc<Alloc>)
+        : data(Blk{}), allocator(alloc) {
+    }
+    UniquePtr(Blk blk, Alloc& alloc = GlobalAlloc<Alloc>)
         : data(blk), allocator(alloc) {
     }
 
@@ -134,8 +140,12 @@ class UniquePtr<T[], Alloc> {
             for (int i = len - 1; i >= 0; i--) {
                 ((T*)oldData.ptr)->~T();
             }
-            allocator.deallocate(oldData);
+            getAllocator().deallocate(oldData);
         }
+    }
+
+    [[nodiscard]] Alloc& getAllocator() noexcept {
+        return allocator.get();
     }
 
     [[nodiscard]] T* get() noexcept {
@@ -189,9 +199,7 @@ class UniquePtr<T[], Alloc> {
 
   private:
     Blk data;
-
-  public:
-    Alloc allocator;
+    Ref<Alloc> allocator;
 };
 
 template <typename T, Allocator Alloc, typename... Args>

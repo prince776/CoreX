@@ -1,5 +1,6 @@
 #pragma once
 
+#include <CoreX/algorithms.hpp>
 #include <CoreX/allocator.hpp>
 #include <CoreX/array.hpp>
 #include <CoreX/concepts.hpp>
@@ -11,3 +12,4 @@
 #include <CoreX/unique_ptr.hpp>
 #include <CoreX/utility.hpp>
 #include <CoreX/variant.hpp>
+#include <CoreX/vector.hpp>

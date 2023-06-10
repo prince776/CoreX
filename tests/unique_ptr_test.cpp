@@ -41,7 +41,7 @@ TEST(TestUniquePtr, NonArray) {
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
-        EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(int));
+        EXPECT_EQ(ptr.getAllocator().memTracker[allocatedAddr], sizeof(int));
 
         EXPECT_EQ(val, (*ptr).value().get());
         val                  = 10;
@@ -50,7 +50,7 @@ TEST(TestUniquePtr, NonArray) {
 
         // Check for free.
         ptr.~UniquePtr();
-        EXPECT_EQ(false, ptr.allocator.memTracker.contains(allocatedAddr));
+        EXPECT_EQ(false, ptr.getAllocator().memTracker.contains(allocatedAddr));
     }
 
     {
@@ -64,7 +64,7 @@ TEST(TestUniquePtr, NonArray) {
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
-        EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(Temp));
+        EXPECT_EQ(ptr.getAllocator().memTracker[allocatedAddr], sizeof(Temp));
 
         EXPECT_EQ(4, ptr->x);
         EXPECT_EQ(5, ptr->y);
@@ -77,7 +77,7 @@ TEST(TestUniquePtr, NonArray) {
 
         // Check for free.
         ptr.~UniquePtr();
-        EXPECT_EQ(false, ptr.allocator.memTracker.contains(allocatedAddr));
+        EXPECT_EQ(false, ptr.getAllocator().memTracker.contains(allocatedAddr));
     }
 }
 
@@ -90,7 +90,8 @@ TEST(TestUniquePtr, Array) {
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
-        EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(int) * num);
+        EXPECT_EQ(ptr.getAllocator().memTracker[allocatedAddr],
+                  sizeof(int) * num);
 
         EXPECT_EQ(0, (*ptr).value().get());
         (*ptr).value().get() = 1;
@@ -101,7 +102,7 @@ TEST(TestUniquePtr, Array) {
 
         // Check for free.
         ptr.~UniquePtr();
-        EXPECT_EQ(false, ptr.allocator.memTracker.contains(allocatedAddr));
+        EXPECT_EQ(false, ptr.getAllocator().memTracker.contains(allocatedAddr));
     }
 
     {
@@ -117,7 +118,8 @@ TEST(TestUniquePtr, Array) {
 
         // Check for allocation.
         allocatedAddr = (uint64_t)ptr.get();
-        EXPECT_EQ(ptr.allocator.memTracker[allocatedAddr], sizeof(Temp) * num);
+        EXPECT_EQ(ptr.getAllocator().memTracker[allocatedAddr],
+                  sizeof(Temp) * num);
 
         for (int i = 0; i < 5; i++) {
             EXPECT_EQ(4, ptr[i].value().get().x);
@@ -132,7 +134,7 @@ TEST(TestUniquePtr, Array) {
 
         // Check for free.
         ptr.~UniquePtr();
-        EXPECT_EQ(false, ptr.allocator.memTracker.contains(allocatedAddr));
+        EXPECT_EQ(false, ptr.getAllocator().memTracker.contains(allocatedAddr));
     }
     {
         int* x = nullptr;
