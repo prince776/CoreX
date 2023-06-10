@@ -32,6 +32,7 @@ class UniquePtr {
     }
     UniquePtr& operator=(UniquePtr&& rhs) {
         reset(rhs.release());
+        allocator.get() = rhs.allocator;
         return *this;
     }
 
@@ -119,6 +120,7 @@ class UniquePtr<T[], Alloc> {
     }
     UniquePtr& operator=(UniquePtr&& rhs) {
         reset(rhs.release());
+        allocator.get() = rhs.allocator;
         return *this;
     }
 
