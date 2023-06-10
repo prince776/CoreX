@@ -59,14 +59,14 @@ TEST(TestVector, BasicTests) {
         }
     }
     {
-        Vector<int> a;
+        Vector<std::string> a;
         for (int i = 0; i < 10; i++) {
-            a.push_back(10);
+            a.push_back("test");
         }
 
         EXPECT_EQ(10, a.size());
         for (auto v : a) {
-            EXPECT_EQ(10, v);
+            EXPECT_EQ(std::string("test"), v);
         }
     }
 }
