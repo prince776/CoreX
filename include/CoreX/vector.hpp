@@ -65,11 +65,17 @@ class Vector {
     [[nodiscard]] const ForwardIterator<const T> cbegin() const noexcept {
         return data.get();
     }
+    [[nodiscard]] const ForwardIterator<const T> begin() const noexcept {
+        return data.get();
+    }
 
     [[nodiscard]] ForwardIterator<T> end() noexcept {
         return data.get() + size();
     }
     [[nodiscard]] const ForwardIterator<const T> cend() const noexcept {
+        return data.get() + size();
+    }
+    [[nodiscard]] const ForwardIterator<const T> end() const noexcept {
         return data.get() + size();
     }
 
@@ -125,7 +131,6 @@ class Vector {
     [[nodiscard]] bool operator==(const Vector& other) const noexcept {
         if (size() != other.size()) {
             return false;
-            
         }
         auto it = cbegin(), it2 = other.cbegin();
         for (; it != cend(); it++, it2++) {

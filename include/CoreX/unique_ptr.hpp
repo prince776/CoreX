@@ -27,11 +27,12 @@ class UniquePtr {
     UniquePtr& operator=(const UniquePtr&) = delete;
 
     // Move constructors.
-    UniquePtr(UniquePtr&& rhs) {
+    UniquePtr(UniquePtr&& rhs) : allocator(rhs.allocator) {
         reset(rhs.release());
     }
     UniquePtr& operator=(UniquePtr&& rhs) {
         reset(rhs.release());
+        allocator.get() = rhs.allocator;
         return *this;
     }
 
@@ -114,11 +115,12 @@ class UniquePtr<T[], Alloc> {
     UniquePtr& operator=(const UniquePtr&) = delete;
 
     // Move constructors.
-    UniquePtr(UniquePtr&& rhs) {
+    UniquePtr(UniquePtr&& rhs) : allocator(rhs.allocator) {
         reset(rhs.release());
     }
     UniquePtr& operator=(UniquePtr&& rhs) {
         reset(rhs.release());
+        allocator.get() = rhs.allocator;
         return *this;
     }
 
@@ -138,7 +140,7 @@ class UniquePtr<T[], Alloc> {
         if (oldData.ptr) {
             int len = oldData.size / sizeof(T);
             for (int i = len - 1; i >= 0; i--) {
-                ((T*)oldData.ptr)->~T();
+                ((T*)oldData.ptr + i)->~T();
             }
             getAllocator().deallocate(oldData);
         }

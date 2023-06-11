@@ -1,5 +1,8 @@
+#include "CoreX/allocator.hpp"
+#include "CoreX/string.hpp"
 #include <CoreX/CoreX.hpp>
 #include <gtest/gtest.h>
+#include <iostream>
 
 TEST(TestVector, BasicTests) {
     {
@@ -53,5 +56,31 @@ TEST(TestVector, BasicTests) {
         Vector<int> v(5, 10);
         auto v2 = v;
         EXPECT_EQ(v, v2);
+
+        for (const auto& x : v) {
+            EXPECT_EQ(10, x);
+        }
+    }
+    {
+        Vector<std::string> a;
+        for (int i = 0; i < 10; i++) {
+            a.push_back("test");
+        }
+
+        EXPECT_EQ(10, a.size());
+        for (auto v : a) {
+            EXPECT_EQ(std::string("test"), v);
+        }
+    }
+    {
+        Vector<String<Mallocator>> a;
+        for (int i = 0; i < 10; i++) {
+            a.push_back("test");
+        }
+
+        EXPECT_EQ(10, a.size());
+        for (auto v : a) {
+            EXPECT_EQ(String("test"), v);
+        }
     }
 }
