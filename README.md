@@ -30,3 +30,25 @@ Most other errors are recoverable, and hence returned in the following container
 ```cpp
 Result<T, Error>
 ```
+
+## Tests
+
+To build tests:
+
+```bash
+./build.sh
+```
+
+for release build:
+
+```bash
+./build.sh -c Release
+```
+
+To run tests:
+
+```bash
+./run-tests.sh
+```
+
+You can also use the tasks defined in `.vscode/`.
