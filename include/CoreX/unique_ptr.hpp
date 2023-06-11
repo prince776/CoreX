@@ -140,7 +140,7 @@ class UniquePtr<T[], Alloc> {
         if (oldData.ptr) {
             int len = oldData.size / sizeof(T);
             for (int i = len - 1; i >= 0; i--) {
-                ((T*)oldData.ptr)->~T();
+                ((T*)oldData.ptr + i)->~T();
             }
             getAllocator().deallocate(oldData);
         }
