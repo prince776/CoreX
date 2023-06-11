@@ -3,6 +3,7 @@
 #include "CoreX/algorithms.hpp"
 #include "CoreX/allocator.hpp"
 #include <CoreX/vector.hpp>
+#include <iostream>
 
 [[nodiscard]] size_t Strlen(const char*) noexcept;
 
@@ -11,27 +12,37 @@ class String {
   public:
     String(Alloc& allocator = GlobalAlloc<Alloc>) noexcept
         : data(1, '\0', allocator) {
+        std::cout << "Allocated string empty\n";
     }
 
     String(size_t size, Alloc& allocator = GlobalAlloc<Alloc>) noexcept
         : data(size + 1, '\0', allocator) {
+        std::cout << "Allocated string of size" << size << "\n";
     }
 
     String(size_t size,
            char val,
            Alloc& allocator = GlobalAlloc<Alloc>) noexcept
         : data(size + 1, val, allocator) {
+        std::cout << "Allocated string of size" << size << "\n";
         data.back().value().get() = '\0';
     }
 
     String(const char* str, Alloc& allocator = GlobalAlloc<Alloc>) noexcept
         : data(allocator) {
         auto len = Strlen(str);
+        std::cout << "Allocated string of size" << len << "\n";
+
         data.resize(len + 1);
         for (size_t i = 0; i < len; i++) {
             data[i].value().get() = str[i];
         }
         data[len].value().get() = '\0';
+    }
+
+    ~String() {
+        std::cout << "Dellocated string of size" << size() << "\n";
+        data.~Vector();
     }
 
     [[nodiscard]] size_t size() const noexcept {
