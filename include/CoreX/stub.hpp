@@ -6,8 +6,8 @@
 extern "C" {
 #endif
 
-void* malloc(size_t);
-void free(void*);
+void* malloc(size_t) noexcept;
+void free(void*) noexcept;
 
 void Assert(bool);
 
