@@ -1,11 +1,11 @@
 #pragma once
 
-#include "CoreX/type_traits.hpp"
 #include "CoreX/utility.hpp"
 #include <CoreX/allocator.hpp>
 #include <CoreX/error.hpp>
 #include <CoreX/reference.hpp>
-#include <cassert>
+#include <CoreX/stub.hpp>
+#include <CoreX/type_traits.hpp>
 
 template <typename T, Allocator Alloc = Mallocator>
 class UniquePtr {

@@ -50,7 +50,7 @@ foreach(TEST_SOURCE ${TEST_SOURCES})
 
     message("Testname is : ${TEST_NAME}")
     # Add the test executable
-    add_executable(${TEST_NAME} ${TEST_SOURCE})
+    add_executable(${TEST_NAME} ${TEST_SOURCE} tests/test_utility.cpp)
 
     # Link the test executable with Google Test and Corex library
     target_link_libraries(${TEST_NAME} gtest gtest_main CoreX gmock)

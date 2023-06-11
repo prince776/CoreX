@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CoreX/algorithms.hpp"
-#include "CoreX/allocator.hpp"
+#include <CoreX/algorithms.hpp>
+#include <CoreX/allocator.hpp>
 #include <CoreX/vector.hpp>
 
 [[nodiscard]] size_t Strlen(const char*) noexcept;

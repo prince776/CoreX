@@ -1,7 +1,8 @@
 #pragma once
 
-#include "CoreX/error.hpp"
 #include <CoreX/allocator.hpp>
+#include <CoreX/error.hpp>
+#include <CoreX/stub.hpp>
 #include <CoreX/vector.hpp>
 
 // Bitset stores bits in a compact manner, and returns a BitProxy to get a bit
@@ -22,7 +23,7 @@ class Bitset {
       public:
         BitProxy(Bitset& ref, size_t idx, size_t offset)
             : ref(ref), idx(idx), offset(offset) {
-            assert(idx * BlockSize + offset <= ref.size());
+            Assert(idx * BlockSize + offset <= ref.size());
         }
         [[nodiscard]] operator bool() const noexcept {
             return (ref.data[idx].value() & (1LL << offset));

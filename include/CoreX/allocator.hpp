@@ -2,9 +2,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include <CoreX/concepts.hpp>
+#include <CoreX/stub.hpp>
 
 struct Blk {
     void* ptr{nullptr};
@@ -31,12 +31,12 @@ class Mallocator {
         if (!size) {
             return Blk{nullptr, 0};
         }
-        return Blk{malloc(size), size};
+        return Blk{Malloc(size), size};
     }
 
     void deallocate(const Blk& blk) noexcept {
         if (blk.ptr) {
-            free(blk.ptr);
+            Free(blk.ptr);
         }
     }
 

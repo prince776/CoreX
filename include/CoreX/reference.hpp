@@ -11,7 +11,7 @@ class Ref {
     }
 
     constexpr T& get() const noexcept {
-        assert(t != nullptr);
+        Assert(t != nullptr);
         return *t;
     }
 

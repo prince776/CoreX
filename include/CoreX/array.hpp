@@ -4,7 +4,6 @@
 #include <CoreX/error.hpp>
 #include <CoreX/iterator.hpp>
 #include <CoreX/reference.hpp>
-#include <cassert>
 
 template <typename T, size_t _size>
 class Array {

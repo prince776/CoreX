@@ -1,6 +1,8 @@
 #pragma once
 
 #include <CoreX/result.hpp>
+#include <stddef.h>
+#include <stdint.h>
 
 enum class Error : int32_t {
     OutOfBounds,
