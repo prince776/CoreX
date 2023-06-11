@@ -49,35 +49,35 @@ TEST(TestString, BasicTests) {
         String s5 = s.substr(10, 5);
         EXPECT_EQ(String(""), s5);
     }
-    // {
-    //     String s      = "a-b-c";
-    //     auto elements = s.split('-');
+    {
+        String s      = "a-b-c";
+        auto elements = s.split('-');
 
-    //     EXPECT_EQ(3, elements.size());
-    //     EXPECT_EQ(String("a"), elements[0].value());
-    //     EXPECT_EQ(String("b"), elements[1].value());
-    //     EXPECT_EQ(String("c"), elements[2].value());
-    // }
-    // {
-    //     String s      = "abc";
-    //     auto elements = s.split('-');
+        EXPECT_EQ(3, elements.size());
+        EXPECT_EQ(String("a"), elements[0].value());
+        EXPECT_EQ(String("b"), elements[1].value());
+        EXPECT_EQ(String("c"), elements[2].value());
+    }
+    {
+        String s      = "abc";
+        auto elements = s.split('-');
 
-    //     EXPECT_EQ(1, elements.size());
-    //     EXPECT_EQ(String("abc"), elements[0].value());
-    // }
-    // {
-    //     String s      = "";
-    //     auto elements = s.split('-');
+        EXPECT_EQ(1, elements.size());
+        EXPECT_EQ(String("abc"), elements[0].value());
+    }
+    {
+        String s      = "";
+        auto elements = s.split('-');
 
-    //     EXPECT_EQ(1, elements.size());
-    //     EXPECT_EQ(String(""), elements[0].value());
-    // }
-    // {
-    //     String s      = "-";
-    //     auto elements = s.split('-');
+        EXPECT_EQ(1, elements.size());
+        EXPECT_EQ(String(""), elements[0].value());
+    }
+    {
+        String s      = "-";
+        auto elements = s.split('-');
 
-    //     EXPECT_EQ(2, elements.size());
-    //     EXPECT_EQ(String(""), elements[0].value());
-    //     EXPECT_EQ(String(""), elements[1].value());
-    // }
+        EXPECT_EQ(2, elements.size());
+        EXPECT_EQ(String(""), elements[0].value());
+        EXPECT_EQ(String(""), elements[1].value());
+    }
 }
