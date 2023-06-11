@@ -12,7 +12,7 @@ This library requires a few stubs to be implemented with the following signature
 
 ```cpp
 void Assert(bool) noexcept;
-[[nodiscard]] void* malloc(size_t) noexcept;
+[[nodiscard]] void* Malloc(size_t) noexcept;
 void Free(void*) noexcept;
 ```
 
