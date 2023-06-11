@@ -5,4 +5,4 @@
 [[nodiscard]] void* Malloc(size_t) noexcept;
 void Free(void*) noexcept;
 
-void Assert(bool);
+void Assert(bool) noexcept;

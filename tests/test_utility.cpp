@@ -1,7 +1,7 @@
 #include <cassert>
 #include <stdlib.h>
 
-void Assert(bool x) {
+void Assert(bool x) noexcept {
     return assert(x);
 }
 
