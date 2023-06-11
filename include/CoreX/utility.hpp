@@ -2,7 +2,6 @@
 
 #include <CoreX/type_traits.hpp>
 #include <stddef.h>
-#include <utility>
 
 constexpr size_t npos = static_cast<size_t>(-1);
 

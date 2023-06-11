@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CoreX/type_traits.hpp"
+#include <CoreX/stub.hpp>
+#include <CoreX/type_traits.hpp>
 #include <CoreX/utility.hpp>
-#include <cassert>
 
 template <typename... Ts>
 class TypeSequence {};
@@ -85,7 +85,7 @@ class Variant {
 
     template <typename Arg>
     [[nodiscard]] constexpr Arg& get() noexcept {
-        assert(holdsAlternative<Arg>());
+        Assert(holdsAlternative<Arg>());
         return *((Arg*)data);
     }
 

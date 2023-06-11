@@ -2,9 +2,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include <CoreX/concepts.hpp>
+#include <CoreX/stub.hpp>
 
 struct Blk {
     void* ptr{nullptr};

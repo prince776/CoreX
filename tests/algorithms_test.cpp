@@ -1,4 +1,5 @@
 #include "CoreX/algorithms.hpp"
+#include "test_utility.hpp"
 #include <CoreX/CoreX.hpp>
 #include <gtest/gtest.h>
 

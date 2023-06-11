@@ -3,7 +3,7 @@
 #include <string_view>
 
 template <typename T>
-constexpr auto type_name() {
+constexpr inline auto type_name() {
     std::string_view name, prefix, suffix;
 #ifdef __clang__
     name   = __PRETTY_FUNCTION__;

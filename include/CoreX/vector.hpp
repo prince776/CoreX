@@ -1,11 +1,11 @@
 #pragma once
 
-#include "CoreX/utility.hpp"
 #include <CoreX/algorithms.hpp>
 #include <CoreX/error.hpp>
 #include <CoreX/iterator.hpp>
+#include <CoreX/stub.hpp>
 #include <CoreX/unique_ptr.hpp>
-#include <cassert>
+#include <CoreX/utility.hpp>
 
 template <typename T, Allocator Alloc = Mallocator>
 class Vector {
@@ -32,7 +32,7 @@ class Vector {
 
         auto res = Copy(v.cbegin(), v.cend(), begin(), end());
         // Error handling in constructor? HOW?
-        assert(!res.hasError());
+        Assert(!res.hasError());
     }
     [[nodiscard]] Vector& operator=(const Vector<T, Alloc>& v) noexcept {
         m_size   = v.size();
@@ -46,7 +46,7 @@ class Vector {
         data         = Move(newData);
 
         auto res = Copy(v.cbegin(), v.cend(), begin(), end());
-        assert(!res.hasError());
+        Assert(!res.hasError());
         return *this;
     }
 

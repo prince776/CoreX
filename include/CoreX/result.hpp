@@ -1,10 +1,9 @@
 #pragma once
 
 #include <CoreX/concepts.hpp>
+#include <CoreX/stub.hpp>
 #include <CoreX/utility.hpp>
 #include <CoreX/variant.hpp>
-#include <cassert>
-#include <string>
 
 template <typename T, typename E>
 class Result;
@@ -49,12 +48,12 @@ class Result {
     }
 
     [[nodiscard]] E& error() noexcept {
-        assert(hasError());
+        Assert(hasError());
         return data.template get<E>();
     }
 
     [[nodiscard]] T& value() noexcept {
-        assert(!hasError());
+        Assert(!hasError());
         return data.template get<T>();
     }
 
@@ -112,12 +111,12 @@ class Result<T, T> {
     }
 
     [[nodiscard]] T& error() noexcept {
-        assert(hasError());
+        Assert(hasError());
         return data;
     }
 
     [[nodiscard]] T& value() noexcept {
-        assert(!hasError());
+        Assert(!hasError());
         return data;
     }
 
