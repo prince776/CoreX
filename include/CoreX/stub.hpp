@@ -2,15 +2,7 @@
 
 #include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void* malloc(size_t) noexcept;
-void free(void*) noexcept;
+[[nodiscard]] void* Malloc(size_t) noexcept;
+void Free(void*) noexcept;
 
 void Assert(bool);
-
-#ifdef __cplusplus
-}
-#endif

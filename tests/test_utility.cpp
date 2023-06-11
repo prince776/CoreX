@@ -1,5 +1,14 @@
 #include <cassert>
+#include <stdlib.h>
 
-extern "C" void Assert(bool x) {
+void Assert(bool x) {
     return assert(x);
+}
+
+[[nodiscard]] void* Malloc(size_t size) noexcept {
+    return malloc(size);
+}
+
+void Free(void* ptr) noexcept {
+    return free(ptr);
 }
